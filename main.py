@@ -13,8 +13,8 @@ from googleapiclient.errors import HttpError
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
-SAMPLE_SPREADSHEET_ID = "1ya3ireVf12scMcCMOU9aXW3jnu2ELmDn1M53gJAVKqw"
-SAMPLE_RANGE_NAME = "Form Responses 1!A1:H22"
+# SAMPLE_SPREADSHEET_ID = "1ya3ireVf12scMcCMOU9aXW3jnu2ELmDn1M53gJAVKqw"
+# SAMPLE_RANGE_NAME = "Form Responses 1!A1:H22"
 
 
 def main():
@@ -40,18 +40,20 @@ def main():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
 
+    service = build("sheets", "v4", credentials=creds)
 
-#   try:
-#     service = build("sheets", "v4", credentials=creds)
+    # Call the Sheets API
+    sheet = service.spreadsheets()
+    result = (
+        sheet.values()
+        .get(
+            spreadsheetId="1ya3ireVf12scMcCMOU9aXW3jnu2ELmDn1M53gJAVKqw",
+            range="Form Responses 1!A1:H22",
+        )
+        .execute()
+    )
+    values = result.get("values", [])
 
-#     # Call the Sheets API
-#     sheet = service.spreadsheets()
-#     result = (
-#         sheet.values()
-#         .get(spreadsheetId=SAMPLE_SPREADSHEET_ID, range=SAMPLE_RANGE_NAME)
-#         .execute()
-#     )
-#     values = result.get("values", [])
 
 #     if not values:
 #       print("No data found.")
